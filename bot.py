@@ -55,7 +55,7 @@ def write_db(chat_id, value):
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS Users (
     chat_id INTEGER PRIMARY KEY,
-    value REAL
+    value TEXT
     )
     ''')   
 

@@ -55,7 +55,7 @@ def write_db(chat_id, value):
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS Users (
     chat_id INTEGER PRIMARY KEY,
-    value REAL
+    value TEXT
     )
     ''')   
 
@@ -105,17 +105,17 @@ def calclater(call):
             value = ''
             write_db(call.message.chat.id, value)
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='ERROR: Деление на ноль', reply_markup=markup)
-            logger.info(f"[chat_id: {call.message.chat.id}] - [ERROR: Division by zero] - [value: {value}]")
+            logger.error(f"[chat_id: {call.message.chat.id}] - [ERROR: Division by zero] - [value: {value}]")
         except SyntaxError:
             value = ''
             write_db(call.message.chat.id, value)
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='ERROR: Неправильный синтаксис', reply_markup=markup)
-            logger.info(f"[chat_id: {call.message.chat.id}] - [ERROR: Invalid syntax] - [value: {value}]")
+            logger.error(f"[chat_id: {call.message.chat.id}] - [ERROR: Invalid syntax] - [value: {value}]")
         except ValueError:
             value = ''
             write_db(call.message.chat.id, value)
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='ERROR: Ошибка значения', reply_markup=markup)
-            logger.info(f"[chat_id: {call.message.chat.id}] - [ERROR: Value Error] - [value: {value}]")
+            logger.error(f"[chat_id: {call.message.chat.id}] - [ERROR: Value Error] - [value: {value}]")
       
     elif data == 'clear':
         value = ''

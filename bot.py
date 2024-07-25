@@ -1,7 +1,7 @@
 import telebot, config, sqlite3
 from telebot import types
 
-API_TOKEN = config.token
+API_TOKEN = config.TG_BOT_TOKEN
 
 bot = telebot.TeleBot(API_TOKEN) 
 

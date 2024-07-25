@@ -18,7 +18,7 @@ API_TOKEN = config.TG_BOT_TOKEN
 
 bot = telebot.TeleBot(API_TOKEN)
 
-markup = types.InlineKeyboardMarkup(row_width=4)
+markup = types.InlineKeyboardMarkup(row_width=5)
 
 btn_0 = types.InlineKeyboardButton('0', callback_data='0')
 btn_1 = types.InlineKeyboardButton('1', callback_data='1')
@@ -40,12 +40,16 @@ btn_divide = types.InlineKeyboardButton('/', callback_data='/')
 btn_mult = types.InlineKeyboardButton('*', callback_data='*')
 btn_minus = types.InlineKeyboardButton('-', callback_data='-')
 btn_plus = types.InlineKeyboardButton('+', callback_data='+')
+btn_bracket_left = types.InlineKeyboardButton('(', callback_data='(')
+btn_bracket_right = types.InlineKeyboardButton(')', callback_data=')')
+btn_sqr = types.InlineKeyboardButton('^', callback_data='**')
+btn_sqrt = types.InlineKeyboardButton('\U0000221Ax', callback_data='sqrt')
 
-markup.add(btn_blank, btn_clear, btn_delete, btn_divide,
-           btn_7, btn_8, btn_9, btn_mult,
-           btn_4, btn_5, btn_6, btn_minus,
-           btn_1, btn_2, btn_3, btn_plus,
-           btn_blank, btn_0, btn_point, btn_equal)
+markup.add(btn_clear, btn_delete, btn_bracket_left, btn_bracket_right, btn_divide,
+           btn_sqrt, btn_7, btn_8, btn_9, btn_mult,
+           btn_sqr, btn_4, btn_5, btn_6, btn_minus,
+           btn_blank, btn_1, btn_2, btn_3, btn_plus,
+           btn_blank, btn_blank, btn_0, btn_point, btn_equal)
 
 
 def write_db(chat_id, value):
@@ -126,6 +130,9 @@ def calclater(call):
             write_db(call.message.chat.id, value)
         except:
             pass
+    elif data == 'sqrt':
+        value = str(float(value)**0.5)
+        write_db(call.message.chat.id, value)
     elif data == 'nothing':
         pass
     else:
@@ -140,12 +147,12 @@ def calclater(call):
         else:
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=value, reply_markup=markup)
     
-    logger.info(f"[chat_id: {call.message.chat.id}] - [value: {value}]")
+    logger.info(f"[chat_id: {call.message.chat.id, call.message.chat.first_name, call.message.chat.last_name,}] - [value: {value}]")
     
 
 bot.infinity_polling()
 
 # todo: value для каждого пользователя по chat_id через БД SQLite | СДЕЛАНО!
 # todo: добавить логирование | СДЕЛАНО!
-# todo: добавить скобочки и проверить работают ли они с eval()
+# todo: добавить скобочки и проверить работают ли они с eval() + сделал кнопки sqrt и sqr | СДЕЛАНО!
 # todo: сделать бота асинхронным

@@ -3,14 +3,7 @@ from telebot import types
 
 API_TOKEN = config.token
 
-bot = telebot.TeleBot(API_TOKEN)
-
-# cursor.execute('''
-#     CREATE TABLE IF NOT EXISTS Users (
-#     chat_id INTEGER PRIMARY KEY,
-#     value REAL
-#     )
-#     ''')    
+bot = telebot.TeleBot(API_TOKEN) 
 
 markup = types.InlineKeyboardMarkup(row_width=4)
 
@@ -45,6 +38,13 @@ markup.add(btn_blank, btn_clear, btn_delete, btn_divide,
 def write_db(chat_id, value):
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
+    
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS Users (
+    chat_id INTEGER PRIMARY KEY,
+    value REAL
+    )
+    ''')   
 
     cursor.execute('REPLACE INTO Users (chat_id, value) VALUES(?, ?)', (chat_id, value))
     
@@ -121,4 +121,4 @@ def calclater(call):
 
 bot.infinity_polling()
 
-# todo: value для каждого пользователя по chat_id через БД SQL
+# todo: value для каждого пользователя по chat_id через БД SQLite | СДЕЛАНО!

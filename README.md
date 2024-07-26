@@ -10,6 +10,10 @@ A telegram bot created with aiogram and a SQLite database that makes a working c
 
 Just enter the token in `config.py` and run `bot.py`
 
+## Working Telegram Bot:
+
+https://t.me/CalcLaterBot
+
 ## Installation
 ```shell
 # clone the repository

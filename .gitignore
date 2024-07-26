@@ -1,5 +1,5 @@
+# /config.py
 /send.py
-/config.py
 /database.db
 venv/
 __pycache__/

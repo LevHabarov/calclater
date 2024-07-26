@@ -30,10 +30,10 @@ TG_BOT_TOKEN = 1234567890:AAA-AaA1aaa1AAaaAa1a1AAAAA-a1aa1-Aa
 ### Using Python
 ```shell
 # install requirements
-$ python3 -m pip install -r requirements.txt
+$ python -m pip install -r requirements.txt
 
 # run script
-$ python3 vktgbot
+$ python bot.py
 ```
 
 ## License

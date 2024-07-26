@@ -10,7 +10,7 @@ A python script that creates a simple calculator from an InlineKeyboardButton in
 
 Just enter the token in `config.py` and run `bot.py`
 
-## Working Telegrab Bot:
+## Working Telegram Bot:
 
 https://t.me/CalcLaterBot
 

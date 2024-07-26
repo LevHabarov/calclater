@@ -22,7 +22,7 @@ $ cd calclater
 ## Configuring
 **Open `config.py` configuration file with text editor and set the following variables:**
 ```ini
-TG_BOT_TOKEN = 1234567890:AAA-AaA1aaa1AAaaAa1a1AAAAA-a1aa1-Aa
+TG_BOT_TOKEN = '1234567890:AAA-AaA1aaa1AAaaAa1a1AAAAA-a1aa1-Aa'
 ```
 * `TG_BOT_TOKEN` is token for your Telegram bot. You can get it here: [BotFather](https://t.me/BotFather).
 

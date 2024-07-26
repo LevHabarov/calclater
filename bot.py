@@ -1,4 +1,5 @@
-import telebot, config, sqlite3, logging
+import telebot, config, sqlite3, logging, asyncio
+from telebot.async_telebot import AsyncTeleBot
 from telebot import types
 
 logger = logging.getLogger()
@@ -16,7 +17,7 @@ logger.info('Bot has been laucnhed.')
 
 API_TOKEN = config.TG_BOT_TOKEN
 
-bot = telebot.TeleBot(API_TOKEN)
+bot = AsyncTeleBot(API_TOKEN)
 
 markup = types.InlineKeyboardMarkup(row_width=5)
 
@@ -82,18 +83,17 @@ def read_db(chat_id):
     
 
 @bot.message_handler(commands=['help', 'start'])
-def start(message):
-    bot.send_message(message.chat.id, 'Чтобы воспользоваться калькулятором, пропиши команду /calclater')
+async def start(message):
+    await bot.send_message(message.chat.id, 'Чтобы воспользоваться калькулятором, пропиши команду /calclater')
 
 
 @bot.message_handler(commands=['calclater'])
-def calclater(message):
-    bot.send_message(message.chat.id, '0', reply_markup=markup)
+async def calclater(message):
+    await bot.send_message(message.chat.id, '0', reply_markup=markup)
     write_db(message.chat.id, '')
 
 @bot.callback_query_handler(func=lambda call:True)
-def calclater(call):
-    # global value
+async def calclater(call):
     
     value = read_db(call.message.chat.id)
     
@@ -108,17 +108,17 @@ def calclater(call):
         except ZeroDivisionError:
             value = ''
             write_db(call.message.chat.id, value)
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='ERROR: Деление на ноль', reply_markup=markup)
+            await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='ERROR: Деление на ноль', reply_markup=markup)
             logger.error(f"[chat_id: {call.message.chat.id}] - [ERROR: Division by zero] - [value: {value}]")
         except SyntaxError:
             value = ''
             write_db(call.message.chat.id, value)
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='ERROR: Неправильный синтаксис', reply_markup=markup)
+            await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='ERROR: Неправильный синтаксис', reply_markup=markup)
             logger.error(f"[chat_id: {call.message.chat.id}] - [ERROR: Invalid syntax] - [value: {value}]")
         except ValueError:
             value = ''
             write_db(call.message.chat.id, value)
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='ERROR: Ошибка значения', reply_markup=markup)
+            await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='ERROR: Ошибка значения', reply_markup=markup)
             logger.error(f"[chat_id: {call.message.chat.id}] - [ERROR: Value Error] - [value: {value}]")
       
     elif data == 'clear':
@@ -139,20 +139,21 @@ def calclater(call):
         value += data
         write_db(call.message.chat.id, value)
         
-    bot.answer_callback_query(call.id)
+    await bot.answer_callback_query(call.id)
         
     if value != old_value: 
         if value == '':
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='0', reply_markup=markup)
+            await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text='0', reply_markup=markup)
         else:
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=value, reply_markup=markup)
+            await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.id, text=value, reply_markup=markup)
     
     logger.info(f"[chat_id: {call.message.chat.id, call.message.chat.first_name, call.message.chat.last_name,}] - [value: {value}]")
     
 
-bot.infinity_polling()
+asyncio.run(bot.polling())
 
 # todo: value для каждого пользователя по chat_id через БД SQLite | СДЕЛАНО!
 # todo: добавить логирование | СДЕЛАНО!
 # todo: добавить скобочки и проверить работают ли они с eval() + сделал кнопки sqrt и sqr | СДЕЛАНО!
-# todo: сделать бота асинхронным
+# todo: сделать бота асинхронным | СДЕЛАНО!
+# todo: переписать бота на библиотеке aiogramm

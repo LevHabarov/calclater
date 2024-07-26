@@ -4,7 +4,7 @@
 
 ## About
 
-A python script that creates a simple calculator from an InlineKeyboardButton in Telegram, and using a SQLite database.
+A telegram bot created with aiogram and a SQLite database that makes a working calculator out of an InlineKeyboardButton.
 
 ## How to use the script
 

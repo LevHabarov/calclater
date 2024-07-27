@@ -5,7 +5,7 @@ from aiogram.filters.command import Command
 
 
 async def write_db(chat_id, value):
-    connection = sqlite3.connect('database.db')
+    connection = sqlite3.connect('data/database.db')
     cursor = connection.cursor()
     
     cursor.execute('''
@@ -21,7 +21,7 @@ async def write_db(chat_id, value):
     connection.close()
 
 async def read_db(chat_id):
-    connection = sqlite3.connect('database.db')
+    connection = sqlite3.connect('data/database.db')
     cursor = connection.cursor()
 
     cursor.execute('SELECT value FROM Users WHERE chat_id == ?', (chat_id,))

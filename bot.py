@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters.command import Command
 
 
-def write_db(chat_id, value):
+async def write_db(chat_id, value):
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
     
@@ -20,7 +20,7 @@ def write_db(chat_id, value):
     connection.commit()
     connection.close()
 
-def read_db(chat_id):
+async def read_db(chat_id):
     connection = sqlite3.connect('database.db')
     cursor = connection.cursor()
 
@@ -91,13 +91,13 @@ async def cmd_start(message: types.Message):
 
 @dp.message(Command('calclater'))
 async def cmd_calclater(message: types.Message):
-    msg = await message.answer('0', reply_markup=markup)
-    write_db(message.chat.id, '')
+    await message.answer('0', reply_markup=markup)
+    await write_db(message.chat.id, '')
 
 @dp.callback_query(lambda call: True) 
 async def calclater_query(call: types.CallbackQuery): 
   
-    value = read_db(call.message.chat.id)
+    value = await read_db(call.message.chat.id)
     
     data = call.data
     old_value = value
@@ -105,41 +105,41 @@ async def calclater_query(call: types.CallbackQuery):
     if data == 'equal':
         try:
             value = str(eval(value))
-            write_db(call.message.chat.id, value)
+            await write_db(call.message.chat.id, value)
             
         except ZeroDivisionError:
             value = ''
-            write_db(call.message.chat.id, value)
+            await write_db(call.message.chat.id, value)
             await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='ERROR: Деление на ноль', reply_markup=markup)
             logger.error(f"[chat_id: {call.message.chat.id}] - [ERROR: Division by zero] - [value: {value}]")
         except SyntaxError:
             value = ''
-            write_db(call.message.chat.id, value)
+            await write_db(call.message.chat.id, value)
             await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='ERROR: Неправильный синтаксис', reply_markup=markup)
             logger.error(f"[chat_id: {call.message.chat.id}] - [ERROR: Invalid syntax] - [value: {value}]")
         except ValueError:
             value = ''
-            write_db(call.message.chat.id, value)
+            await write_db(call.message.chat.id, value)
             await bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='ERROR: Ошибка значения', reply_markup=markup)
             logger.error(f"[chat_id: {call.message.chat.id}] - [ERROR: Value Error] - [value: {value}]")
       
     elif data == 'clear':
         value = ''
-        write_db(call.message.chat.id, value)
+        await write_db(call.message.chat.id, value)
     elif data == 'delete':
         try:
             value = value[:-1]
-            write_db(call.message.chat.id, value)
+            await write_db(call.message.chat.id, value)
         except:
             pass
     elif data == 'sqrt':
         value = str(float(value)**0.5)
-        write_db(call.message.chat.id, value)
+        await write_db(call.message.chat.id, value)
     elif data == 'nothing':
         pass
     else:
         value += data
-        write_db(call.message.chat.id, value)
+        await write_db(call.message.chat.id, value)
         
     await bot.answer_callback_query(call.id)
         
@@ -163,4 +163,4 @@ if __name__ == '__main__':
 # todo: добавить скобочки и проверить работают ли они с eval() + сделал кнопки sqrt и sqr | СДЕЛАНО!
 # todo: сделать бота асинхронным | СДЕЛАНО!
 # todo: переписать бота на библиотеке aiogram | СДЕЛАНО!
-# todo: разобраться с БД, скорее всего из-за неё тормозит | В РАБОТЕ
+# todo: разобраться с БД, скорее всего из-за неё тормозит | СДЕЛАНО!
